@@ -7,7 +7,8 @@ class TagService {
         this.tagRepository = AppDataSource.getRepository(Tag)
     }
     getAll = async() =>{
-        return await this.tagRepository.find()
+        let sql = `select * from tag`
+        return await this.tagRepository.query(sql)
     }
 }
 export default new TagService()

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajax</title>
+  </head>
+  <body> <button onclick="showHome()">Home</button>
+    <button onclick="showFormAdd()">Add</button>
+    <div id="body">
+   
+    <table border="1">
+      <thead>
+        <tr>
+          <td>Id</td>
+          <td>Name</td>
+          <td>Content</td>
+          <td>Image</td>
+          <td>Tag</td>
+          <td colspan="2">Action</td>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+     
+    </table>
+</div>  
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+<script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCGl4QitF0a5dyxBPpkrSvmRh0zuVHvSeA",
+  authDomain: "blog-510b1.firebaseapp.com",
+  projectId: "blog-510b1",
+  storageBucket: "blog-510b1.appspot.com",
+  messagingSenderId: "249561359587",
+  appId: "1:249561359587:web:0a7d1acacc037ba8b751d6",
+  measurementId: "G-429V3LBDHR"
+};
+    firebase.initializeApp(firebaseConfig);
+</script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+      integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==
+    "
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="./src/home.js"></script>
+  </body>
+</html>

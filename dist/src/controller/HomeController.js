@@ -7,53 +7,43 @@ const tagService_1 = __importDefault(require("../service/tagService"));
 const blogService_1 = __importDefault(require("../service/blogService"));
 class HomeController {
     constructor() {
-        this.showHome = async (req, res) => {
-            let nameSearch = req.query.nameSearch;
-            if (!nameSearch) {
+        this.getAll = async (req, res) => {
+            try {
                 let blogs = await blogService_1.default.getAll();
-                let tags = await tagService_1.default.getAll();
-                res.render("home", { blogs: blogs, tags: tags });
+                res.status(200).json(blogs);
             }
-            else {
-                let blogs = await blogService_1.default.searchByName(nameSearch);
-                let tags = await tagService_1.default.getAll();
-                res.render("home", { blogs: blogs, tags: tags });
+            catch (e) {
+                res.status(500).json(e.message);
             }
         };
-        this.showFormCreate = async (req, res) => {
+        this.getTags = async (req, res) => {
             let tags = await tagService_1.default.getAll();
-            res.render("create", { tags: tags });
-        };
-        this.showFormEdit = async (req, res) => {
-            let id = req.params.id;
-            let blogs = await blogService_1.default.findById(id);
-            let tags = await tagService_1.default.getAll();
-            res.render("edit", { blogs: blogs, tags: tags });
+            res.status(200).json(tags);
         };
         this.create = async (req, res) => {
-            if (req.files) {
-                let image = req.files.image;
-                if ("mv" in image) {
-                    await image.mv("./public/images" + image.name);
-                    let blog = req.body;
-                    blog.image = "/images/" + image.name;
-                    await blogService_1.default.save(blog);
-                    console.log(blog.tag);
-                    console.log(blog.idBlog);
-                    res.redirect(301, "/home");
-                }
-            }
+            let newBlog = await blogService_1.default.save(req.body);
+            res.status(200).json(newBlog);
         };
         this.delete = async (req, res) => {
             let id = req.params.id;
             await blogService_1.default.remove(id);
-            res.redirect(301, "/home");
+            res.status(200).json();
         };
         this.update = async (req, res) => {
             let blog = req.body;
             let id = req.params.id;
             await blogService_1.default.update(id, blog);
-            res.redirect(301, "/home");
+            res.status(200).json();
+        };
+        this.findById = async (req, res) => {
+            try {
+                let id = req.params.id;
+                let blogs = await blogService_1.default.findById(id);
+                res.status(200).json(blogs);
+            }
+            catch (e) {
+                res.status(500).json(e.message);
+            }
         };
     }
 }

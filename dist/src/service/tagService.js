@@ -5,7 +5,8 @@ const tag_1 = require("../model/tag");
 class TagService {
     constructor() {
         this.getAll = async () => {
-            return await this.tagRepository.find();
+            let sql = `select * from tag`;
+            return await this.tagRepository.query(sql);
         };
         this.tagRepository = data_source_1.AppDataSource.getRepository(tag_1.Tag);
     }
