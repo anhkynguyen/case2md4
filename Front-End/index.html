@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ajax</title>
   </head>
-  <body> <button onclick="showHome()">Home</button>
-    <button onclick="showFormAdd()">Add</button>
+<div id ="navBar"></div>
+  <!-- <body> <button onclick="showHome()">Home</button>
+    <button onclick="showFormAdd()">Add</button> -->
     <div id="body">
    
-    <table border="1">
+    <!-- <table border="1">
       <thead>
         <tr>
           <td>Id</td>
@@ -23,7 +24,7 @@
       </thead>
       <tbody id="tbody"></tbody>
      
-    </table>
+    </table> -->
 </div>  
 <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 <script>
@@ -47,5 +48,6 @@ const firebaseConfig = {
       referrerpolicy="no-referrer"
     ></script>
     <script src="./src/home.js"></script>
+    <script src="./src/showNavbar.js" ></script>
   </body>
 </html>

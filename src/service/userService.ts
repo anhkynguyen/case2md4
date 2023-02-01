@@ -1,6 +1,9 @@
 
 import { AppDataSource } from '../data-source';
+import { SECRET } from '../middleware/auth';
 import { User } from '../model/user';
+import bcrypt from "bcrypt"
+import jwt from 'jsonwebtoken'
 class UserService {
     private userRepository;
 
@@ -8,18 +11,36 @@ class UserService {
  this.userRepository = AppDataSource.getRepository(User)
     }
 
-save = async(user) =>{
-   return await this.userRepository.save(user)
+register = async(user)=>{
+ user.password = await bcrypt.hash(user.password,10)
+ return this.userRepository.save(user)
+
 }
+
+
 checkUser = async(user)=>{
-    let userCheck = await this.userRepository.findOneBy({username:user.username, password: user.password})
+    let userCheck = await this.userRepository.findOneBy({username:user.username})
  
     
     if(!userCheck){
-        return null
+        return "User is not exist !!"
     }
     else{
-        return userCheck
+        let passwordCompare = bcrypt.compare(user.password , userCheck.password) 
+        if(!passwordCompare){
+            return "password is wrong !!"
+        }
+        else{
+            let payload ={
+                idUser : userCheck.id,
+                username : userCheck.username 
+            }
+        
+        return jwt.sign(payload, SECRET, {
+                expiresIn : 360000
+            })  
+        }
+
     }
 
 }

@@ -4,9 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogRouter = void 0;
+const auth_1 = require("./../middleware/auth");
 const express_1 = require("express");
 const HomeController_1 = __importDefault(require("../controller/HomeController"));
 exports.blogRouter = (0, express_1.Router)();
+exports.blogRouter.use(auth_1.auth);
 exports.blogRouter.get('/', HomeController_1.default.getAll);
 exports.blogRouter.post('/', HomeController_1.default.create);
 exports.blogRouter.delete('/:id', HomeController_1.default.delete);

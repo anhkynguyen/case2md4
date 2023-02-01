@@ -25,10 +25,6 @@ __decorate([
     (0, typeorm_1.Column)({ default: "" }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ default: "" }),
-    __metadata("design:type", String)
-], User.prototype, "status", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);
