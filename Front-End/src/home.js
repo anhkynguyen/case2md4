@@ -217,3 +217,34 @@ localStorage.clear('token')
 showNavbar()
 
 }
+function showFormRegister() {
+  
+
+
+
+  $("#body").html(`<input type="text" id="username" placeholder="username">
+  <input type="password" id="password" placeholder="password">
+  <button onclick="register()">Register</button> `);
+}
+
+function register(){
+  let username = $("#username").val();
+
+  let password = $("#password").val();
+let user = {
+  username : username,
+  password :password
+} 
+$.ajax({
+  type: 'POST',
+  url: 'http://localhost:8080/auth/register',
+  headers: {
+      'Content-Type': 'application/json',
+  },
+  data: JSON.stringify(user),
+  success: () => {
+      showFormLogin()
+  }
+})
+
+}
