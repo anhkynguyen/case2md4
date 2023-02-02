@@ -1,28 +1,46 @@
 // showHome();
 // showBlogs();
 function showBlogs() {
+  let token = JSON.parse(localStorage.getItem("token"));
   $.ajax({
     type: "GET",
     url: "http://localhost:8080/blogs",
-    headers: { "Content-Type": "application/json",
-    Authorization: 'Bearer '+ localStorage.getItem('token') },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token.token,
+    },
     success: (blogs) => {
       let html = "";
-      blogs.map((item) => {
-        html += `<tr>
+      if (token.role === "admin") {
+        blogs.map((item) => {
+          html += `<tr>
+            <td>${item.idBlog}</td>
+            <td>${item.name}</td>
+            <td>${item.content}</td>
+            <td><img src="${item.image}" width = "100px"></td>
+            <td>${item.nameTag}</td>
+            <td><button onclick="removeBlog(${item.idBlog})">Delete</button></td>  
+            <td><button onclick="showFormUpdate(${item.idBlog})">Edit</button></td>  
+          </tr>`;
+        });
+      
+      } else {
+        blogs.map((item) => {
+          html += `<tr>
                 <td>${item.idBlog}</td>
                 <td>${item.name}</td>
                 <td>${item.content}</td>
                 <td><img src="${item.image}" width = "100px"></td>
                 <td>${item.nameTag}</td>
-                <td><button onclick="removeBlog(${item.idBlog})">Delete</button></td>  
-                <td><button onclick="showFormUpdate(${item.idBlog})">Edit</button></td>  
+                <td><button onclick="">buy</button></td>  
+                 
 
                      
-
               </tr>`;
-      });
-      $("#tbody").html(html);
+        });
+       
+      }
+       $("#tbody").html(html);
     },
   });
 }
@@ -74,8 +92,10 @@ function add() {
   $.ajax({
     type: "POST",
     url: "http://localhost:8080/blogs",
-    headers: { "Content-Type": "application/json" ,
-  Authorization: 'Bearer '+ localStorage.getItem('token')},
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
     data: JSON.stringify(blog),
     success: () => {
       showHome();
@@ -86,7 +106,11 @@ function removeBlog(idBlog) {
   $.ajax({
     type: "DELETE",
     url: `http://localhost:8080/blogs/${idBlog}`,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
     success: () => {},
   });
   showHome();
@@ -95,8 +119,10 @@ function showFormUpdate(idBlog) {
   $.ajax({
     type: "GET",
     url: `http://localhost:8080/blogs/${idBlog}`,
-    headers: { "Content-Type": "application/json",
-    Authorization: 'Bearer '+ localStorage.getItem('token') },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
     success: (blogs) => {
       $("#body")
         .html(`<input type="text" id="name" placeholder="name" value = "${blogs.name}">
@@ -108,8 +134,8 @@ function showFormUpdate(idBlog) {
 <option selected>Tag</option>
 
 </select>
-    <button onclick="update('${idBlog}')">Update</button> `)
-    getTagsCreate();
+    <button onclick="update('${idBlog}')">Update</button> `);
+      getTagsCreate();
     },
   });
 }
@@ -127,8 +153,10 @@ function update(idBlog) {
   $.ajax({
     type: "PUT",
     url: `http://localhost:8080/blogs/${idBlog}`,
-    headers: { "Content-Type": "application/json" ,
-    Authorization: 'Bearer '+ localStorage.getItem('token')},
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
     data: JSON.stringify(blog),
     success: () => {},
   });
@@ -171,15 +199,16 @@ function uploadImage(e) {
     }
   );
 }
+
 function getTagsCreate() {
   $.ajax({
     type: "GET",
     url: "http://localhost:8080/tags",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
     },
     success: (tags) => {
-      console.log(tags);
       let Tags = ``;
       for (const tag of tags) {
         Tags += `
@@ -190,61 +219,56 @@ function getTagsCreate() {
     },
   });
 }
-function login(){
-  let username = $('#username').val();
-  let password = $('#password').val();
+
+function login() {
+  let username = $("#username").val();
+  let password = $("#password").val();
   let user = {
-      username: username,
-      password: password
-  }
+    username: username,
+    password: password,
+  };
   $.ajax({
-      type: 'POST',
-      url: 'http://localhost:8080/auth/login',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      data: JSON.stringify(user),
-      success: (token) => {
-          localStorage.setItem('token',token)
-          showHome();
-          showNavbar();
-      }
-  })
+    type: "POST",
+    url: "http://localhost:8080/auth/login",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(user),
+    success: (token) => {
+      localStorage.setItem("token", JSON.stringify(token));
+      console.log(token);
+      showHome();
+      showNavbar();
+    },
+  });
 }
 
-function logout(){
-localStorage.clear('token')
-showNavbar()
-
+function logout() {
+  localStorage.clear();
+  showNavbar();
 }
 function showFormRegister() {
-  
-
-
-
   $("#body").html(`<input type="text" id="username" placeholder="username">
   <input type="password" id="password" placeholder="password">
   <button onclick="register()">Register</button> `);
 }
 
-function register(){
+function register() {
   let username = $("#username").val();
-
   let password = $("#password").val();
-let user = {
-  username : username,
-  password :password
-} 
-$.ajax({
-  type: 'POST',
-  url: 'http://localhost:8080/auth/register',
-  headers: {
-      'Content-Type': 'application/json',
-  },
-  data: JSON.stringify(user),
-  success: () => {
-      showFormLogin()
-  }
-})
-
+  let user = {
+    username: username,
+    password: password,
+  };
+  $.ajax({
+    type: "POST",
+    url: "http://localhost:8080/auth/register",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(user),
+    success: () => {
+      showFormLogin();
+    },
+  });
 }

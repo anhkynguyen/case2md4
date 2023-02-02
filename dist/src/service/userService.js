@@ -15,23 +15,33 @@ class UserService {
             return this.userRepository.save(user);
         };
         this.checkUser = async (user) => {
-            let userCheck = await this.userRepository.findOneBy({ username: user.username });
+            let userCheck = await this.userRepository.findOneBy({
+                username: user.username,
+            });
             if (!userCheck) {
                 return "User is not exist !!";
             }
             else {
-                let passwordCompare = bcrypt_1.default.compare(user.password, userCheck.password);
+                let passwordCompare = await bcrypt_1.default.compare(user.password, userCheck.password);
                 if (!passwordCompare) {
                     return "password is wrong !!";
                 }
                 else {
                     let payload = {
-                        idUser: userCheck.id,
-                        username: userCheck.username
+                        idUser: userCheck.idUser,
+                        username: userCheck.username,
+                        role: userCheck.role,
                     };
-                    return jsonwebtoken_1.default.sign(payload, auth_1.SECRET, {
-                        expiresIn: 360000
+                    let token = jsonwebtoken_1.default.sign(payload, auth_1.SECRET, {
+                        expiresIn: 360000,
                     });
+                    let check = {
+                        idUser: userCheck.idUser,
+                        username: userCheck.username,
+                        role: userCheck,
+                        token: token,
+                    };
+                    return check;
                 }
             }
         };

@@ -8,7 +8,7 @@ export class User {
   username: string;
   @Column({default : ""})
   password: string;
-  // @Column({default : ""})
-  // status: string;
+  @Column({default : "user"})
+  role: string;
 }
 
