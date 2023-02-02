@@ -2,6 +2,7 @@
 // showBlogs();
 function showBlogs() {
   let token = JSON.parse(localStorage.getItem("token"));
+  console.log(token);
   $.ajax({
     type: "GET",
     url: "http://localhost:8080/blogs",
@@ -11,7 +12,7 @@ function showBlogs() {
     },
     success: (blogs) => {
       let html = "";
-      if (token.role === "admin") {
+      if (token.role.role === "admin") {
         blogs.map((item) => {
           html += `<tr>
             <td>${item.idBlog}</td>
